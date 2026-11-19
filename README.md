@@ -47,7 +47,7 @@ your screen, at up to 70 frames per second, with the original music
 ```
 
 - **`index.html`:** the main page.
-  - The demo player has a scene picker, scale, fullscreen and a stats overlay.
+  - The demo player has a scene picker, scale and a stats overlay.
   - A live line under the player shows how many bytes of ANSI Puzzle is parsing per second.
   - "What you're watching" explains the technique, and a note says it also runs in Ghostty.
   - The Puzzle feature list is old-school `*` style.
@@ -65,7 +65,7 @@ your screen, at up to 70 frames per second, with the original music
 | `index.html`, `plasma.html`, `credits.html` | the pages |
 | `css/` | `site.css`, `plasma.css` |
 | `js/showcase.js` | player page: mounting, controls, stats and the live ANSI counter |
-| `js/hero-fit.js` | fits the 320×100 (or 320×175) terminal grid into the frame, including fullscreen |
+| `js/hero-fit.js` | fits the 320×100 (or 320×175) terminal grid into the frame |
 | `js/plasma*.js` | plasma field, PETSCII cell mapping, canvas and terminal sync |
 | `img/`, `fonts/`, `notices/` | poster images, Inter (OFL), extra licence notices |
 | `build.sh` | assembles the deployable site into `_site/` |

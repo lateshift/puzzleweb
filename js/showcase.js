@@ -11,7 +11,6 @@ const scale = document.querySelector("#scale");
 const statsToggle = document.querySelector("#stats-toggle");
 const stats = document.querySelector("#stats");
 const live = document.querySelector("#live");
-const fullscreen = document.querySelector("#fullscreen");
 const status = document.querySelector("#play-status");
 const unsupported = document.querySelector("#unsupported");
 
@@ -121,20 +120,6 @@ statsToggle.addEventListener("click", () => {
   stats.hidden = !stats.hidden;
   statsToggle.setAttribute("aria-expanded", String(!stats.hidden));
   if (!stats.hidden) stats.value = "Collecting playback statistics…";
-});
-
-fullscreen.disabled = !document.fullscreenEnabled;
-fullscreen.addEventListener("click", async () => {
-  try {
-    if (document.fullscreenElement === frame) await document.exitFullscreen();
-    else await frame.requestFullscreen();
-  } catch (error) {
-    status.textContent = "Fullscreen unavailable";
-    console.error(error);
-  }
-});
-document.addEventListener("fullscreenchange", () => {
-  fullscreen.textContent = document.fullscreenElement === frame ? "Exit fullscreen" : "Fullscreen";
 });
 
 async function initPlayback() {
