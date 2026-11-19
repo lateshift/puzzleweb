@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Watch Future Crew’s Second Reality play inside Puzzle Terminal, then explore the engine’s rendering, protocols and browser API.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>Puzzle Terminal — Second Reality</title>
+  <link rel="stylesheet" href="./css/site.css">
+  <script type="module" src="./js/showcase.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="wordmark" href="./">Puzzle Term ft. Second Reality</a>
+      <nav aria-label="Main">
+        <a href="./" aria-current="page">Home</a>
+        <a href="./plasma.html">Plasma</a>
+        <a href="./credits.html">Credits</a>
+        <a href="https://github.com/lateshift/puzzle-term">Repo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Future Crew <span aria-hidden="true">/</span> 1993</p>
+        <h1 id="hero-title">Second<br>Reality<span class="accent">.</span></h1>
+        <!-- README.md: Overview; ANSI Second Reality README.md: Introduction and Build and run -->
+        <p class="lede">Future Crew’s iconic 1993 demo. Not a video: every frame is ANSI escape sequences, rendered live by <strong>Puzzle</strong>, a GPU terminal emulator.</p>
+        <!-- ANSI Second Reality README.md: Credits (FCINFO10.TXT member list; SecondRealityW32; SecondReality++) -->
+        <div class="fc-credit">
+          <p><strong>All creative work is Future Crew’s</strong>: the code, the graphics and the music. We didn’t make this demo; we only taught it to speak ANSI and built the terminal it plays in.</p>
+          <dl class="fc-names">
+            <dt>code</dt><dd>Psi · Trug · Wildfire</dd>
+            <dt>music</dt><dd>Purple Motion · Skaven</dd>
+            <dt>graphics</dt><dd>Marvel · Pixel</dd>
+          </dl>
+          <p class="fc-thanks">Kept alive by Conspiracy (Win32) and XorJS (SecondReality++). Thank you, Future Crew, for the inspiration, then and now. <a href="./credits.html#demo-credit">Full credits</a></p>
+        </div>
+        <div class="hero-links">
+          <a href="#how">What am I looking for?</a>
+          <a href="https://github.com/lateshift/puzzle-term">Puzzle source on GitHub</a>
+        </div>
+      </div>
+
+      <figure class="demo">
+        <div class="frame" id="terminal-frame">
+          <div class="frame-bar">
+            <span class="frame-title"><span class="led" aria-hidden="true"></span> ANSI Second Reality</span>
+            <p id="play-status" class="play-status" role="status">Checking WebGPU…</p>
+          </div>
+          <div class="stage" id="stage">
+            <div class="terminal" id="terminal" aria-label="Puzzle Terminal playback" aria-hidden="true"></div>
+            <div class="poster" id="poster">
+              <!-- ANSI Second Reality REPORT.md: Part 03 Logo, Puzzle screenshot -->
+              <img src="./img/second-reality-logo.png" alt="Second Reality’s blue pixel-art logo and horned figure, captured in Puzzle Terminal" width="800" height="1080">
+            </div>
+            <button class="primary play" id="play" type="button" disabled><span aria-hidden="true">▶</span> Play Second Reality (with sound)</button>
+            <output class="stats" id="stats" aria-label="Playback statistics" aria-live="off" hidden></output>
+          </div>
+          <div class="controls" id="controls">
+            <button id="restart" type="button" disabled>Restart</button>
+            <label class="select-control" for="scene">
+              <span>Scene</span>
+              <select id="scene" disabled>
+                <option value="0">00 · Alkutekstit I</option>
+                <option value="1">01 · Alkutekstit II</option>
+                <option value="2">02 · Alkutekstit III</option>
+                <option value="3">03 · Logo</option>
+                <option value="4">04 · Glenz</option>
+                <option value="5">05 · Dottitunneli</option>
+                <option value="6">06 · Techno</option>
+                <option value="7">07 · Panicfake</option>
+                <option value="8">08 · Vuori-Scrolli</option>
+                <option value="9">09 · Rotazoomer</option>
+                <option value="10">10 · Plasmacube</option>
+                <option value="11">11 · MiniVectorBalls</option>
+                <option value="12">12 · Peilipalloscroll</option>
+                <option value="13">13 · 3D-Sinusfield</option>
+                <option value="14">14 · Jellypic</option>
+                <option value="15">15 · Vector Part II</option>
+                <option value="16">16 · Endpictureflash</option>
+                <option value="17">17 · Credits/Greetings</option>
+                <option value="18">18 · EndScrolling</option>
+              </select>
+            </label>
+            <label class="select-control" for="scale">
+              <span>Scale</span>
+              <select id="scale" disabled>
+                <option value="auto">Auto</option>
+                <option value="half">Half</option>
+              </select>
+            </label>
+            <button id="stats-toggle" type="button" aria-controls="stats" aria-expanded="false" disabled>Stats</button>
+            <button id="fullscreen" type="button">Fullscreen</button>
+          </div>
+          <p id="unsupported" class="fallback" role="status" hidden>Your browser doesn't support WebGPU, which Puzzle's browser renderer needs. Try a current Chrome, Edge or Safari</p>
+          <noscript><p class="fallback">Enable JavaScript to play the demo.</p></noscript>
+        </div>
+        <!-- docs/API.md: Terminal and transport; ANSI Second Reality README.md: Introduction, How it works -->
+        <figcaption>
+          <p class="not-video"><strong>This is not a video.</strong> The original demo code runs in your browser and writes each frame as text: ANSI escape sequences. <strong>Puzzle</strong>, a terminal emulator, parses that byte stream and draws it on the GPU, exactly as it would draw the output of <code>ls</code>.</p>
+          <p class="live" id="live" aria-live="off"></p>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="explain ascii-features" id="how" aria-labelledby="how-title">
+      <h3 id="how-title">What you're watching</h3>
+      <ul>
+        <!-- ANSI Second Reality README.md: Introduction, Credits (SecondReality++) -->
+        <li><b>Not a video</b><span>Future Crew's original demo code (via SecondReality++) runs in your browser as WebAssembly</span></li>
+        <!-- ANSI Second Reality README.md: Pixels: two per cell, using half-blocks -->
+        <li><b>Text only</b><span>each frame is encoded as escape sequences: <code>▀</code> half-blocks, two pixels per character cell, 256-colour indices</span></li>
+        <!-- ANSI Second Reality README.md: Colours; docs/protocols/support.md: OSC 4/104 -->
+        <li><b>Palette tricks</b><span>fades and flashes rewrite the terminal palette with <code>OSC 4</code>; Puzzle recolours the screen without a single cell being resent</span></li>
+        <!-- ANSI Second Reality README.md: Only what changed; docs/protocols/contour.md: Mode 2026 -->
+        <li><b>Only changes</b><span>just the cells that changed are sent, wrapped in synchronized output (<code>mode 2026</code>) so each frame appears at once</span></li>
+        <!-- ANSI Second Reality README.md: Numbers; docs/API.md: Terminal and transport -->
+        <li><b>Puzzle</b><span>parses the stream (tens of megabytes per second in the busiest scenes) and draws the grid on the GPU, at up to 70 frames per second</span></li>
+        <!-- ANSI Second Reality README.md: Introduction, Build and run -->
+        <li><b>A real terminal</b><span>the same byte stream plays natively in Puzzle, Ghostty or any modern terminal</span></li>
+        <!-- this page: Stats toggle -->
+        <li><b>Look closer</b><span>hit <em>Stats</em> to see bytes per frame and write latency</span></li>
+      </ul>
+    </section>
+
+    <!-- ANSI Second Reality README.md: Numbers (Ghostty 1.3.1, full scale, 70 frames/s, no skips) -->
+    <aside class="ghostty-note ascii-features" aria-labelledby="ghostty-title">
+      <h3 id="ghostty-title">Also runs in Ghostty</h3>
+      <p>A note in fairness: this isn't a Puzzle-only trick. ANSI Second Reality writes plain, standard escape sequences, and the native player runs the whole Future Crew demo just as well in <a href="https://ghostty.org">Ghostty</a>, keeping up at full scale and 70 frames per second in our tests.</p>
+      <p>Ghostty was our comparison terminal throughout this port: whenever something looked off, it told us whether the bug was in the demo or in Puzzle. <strong>Big thanks to Mitchell Hashimoto and the Ghostty contributors</strong> for a terminal that sets the bar this high, and for keeping it open for everyone.</p>
+      <p class="sig">-- greetings from the Puzzle crew</p>
+    </aside>
+
+    <section class="features" id="features" aria-labelledby="features-title">
+      <div class="section-heading">
+        <p class="eyebrow">Puzzle Terminal</p>
+        <h2 id="features-title">Inside the engine</h2>
+      </div>
+
+      <div class="ascii-features">
+        <section aria-labelledby="rendering-title">
+          <h3 id="rendering-title">Rendering</h3>
+          <ul>
+            <!-- README.md: Overview; docs/API.md: Terminal and transport -->
+            <li><b>GPU text</b><span>Slug-based glyph rendering in WGSL; grid glyphs cached as bitmaps</span></li>
+            <!-- README.md: Overview; docs/SETTINGS.md: font -->
+            <li><b>Shaping</b><span>Unicode graphemes, colour emoji, coding ligatures, font fallback</span></li>
+            <!-- README.md: Overview; docs/SETTINGS.md: font -->
+            <li><b>Hinting</b><span>outlines fitted to the pixel grid at small sizes</span></li>
+            <!-- docs/protocols/contour.md: Mode 2026 -->
+            <li><b>Sync output</b><span>DEC mode 2026 presents grouped updates in one go</span></li>
+            <!-- docs/protocols/support.md: OSC 4/104 -->
+            <li><b>Live palette</b><span>OSC 4 recolours already-drawn indexed cells</span></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="protocols-title">
+          <h3 id="protocols-title">Protocols</h3>
+          <ul>
+            <!-- docs/protocols/support.md: ECMA-48, DEC, xterm; docs/protocols/xterm.md: Mouse/focus/paste modes and extended SGR -->
+            <li><b>VT essentials</b><span>xterm + DEC controls, 24-bit colour, alt screen, mouse, bracketed paste</span></li>
+            <!-- docs/protocols/support.md: APC G; docs/API.md: Page memory -->
+            <li><b>Kitty graphics</b><span>RGB, RGBA and PNG images, Unicode placeholders (opt-in on the web)</span></li>
+            <!-- docs/protocols/support.md: OSC 8 -->
+            <li><b>Hyperlinks</b><span>OSC 8 links on any text</span></li>
+            <!-- docs/protocols/support.md: OSC 66 -->
+            <li><b>Text sizing</b><span>OSC 66 scaled text inside the grid</span></li>
+            <!-- docs/protocols/xterm.md: OSC 52; docs/protocols/support.md: OSC 5522 clipboard; docs/SETTINGS.md: clipboard -->
+            <li><b>Clipboard</b><span>OSC 52 writes under host policy, reads denied by default; OSC 5522 MIME natively</span></li>
+            <!-- docs/protocols/support.md: OSC 9, OSC 777 and OSC 99; docs/API.md: Notifications, progress and working directory -->
+            <li><b>Notifications</b><span>OSC 9, OSC 777 and a bounded OSC 99 subset</span></li>
+            <!-- docs/protocols/support.md: OSC 133 and Automatic shell integration; docs/API.md: Buffer contents -->
+            <li><b>Shell marks</b><span>OSC 133 prompts, commands and output; automatic shell integration</span></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="api-title">
+          <h3 id="api-title">Browser API</h3>
+          <ul>
+            <!-- docs/API.md: Settings -->
+            <li><b>Settings</b><span>user and session layers, profiles, host-supplied storage</span></li>
+            <!-- docs/API.md: Bus and Command middleware; terminal.d.ts: BusAccess and TerminalMiddleware -->
+            <li><b>Bus</b><span>validated commands and typed events</span></li>
+            <!-- docs/API.md: Command middleware; terminal.d.ts: TerminalMiddleware -->
+            <li><b>Middleware</b><span>pass, replace or cancel input commands</span></li>
+            <!-- docs/API.md: Buffer contents -->
+            <li><b>Buffer</b><span>retained rows and shell zones</span></li>
+            <!-- docs/API.md: Decorations and suggestions -->
+            <li><b>Annotations</b><span>decorations, markers and ghost text</span></li>
+            <!-- docs/API.md: Drag and drop; docs/protocols/support.md: OSC 72 -->
+            <li><b>Drag and drop</b><span>text and URI lists via shared paste policy and OSC 72</span></li>
+            <!-- docs/API.md: Terminal and transport and Page memory; terminal.d.ts: PuzzleTerminal.create -->
+            <li><b>Many terminals</b><span>several per page on one WASM instance and shared GPU resources</span></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="platforms-title">
+          <h3 id="platforms-title">Platforms</h3>
+          <ul>
+            <!-- README.md: Build and run, Embed Puzzle and macOS example app -->
+            <li><b>macOS</b><span>native Rust and C embedding, AppKit example</span></li>
+            <!-- docs/linux.md: Building and GPU backend -->
+            <li><b>Linux</b><span>Unix PTY, Vulkan or GL</span></li>
+            <!-- docs/windows.md: Building and GPU backend -->
+            <li><b>Windows</b><span>Windows 10/11, ConPTY, Vulkan or Direct3D 12</span></li>
+            <!-- docs/API.md: Terminal and transport; dist/pkg/README.md -->
+            <li><b>Web</b><span>WebAssembly + WebGPU in a secure context</span></li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <!-- docs/API.md: Terminal and transport; docs/SETTINGS.md: font.builtinGlyphs -->
+    <a class="plasma-teaser" href="./plasma.html">
+      <img src="./img/plasma-preview.webp" width="640" height="280" loading="lazy" alt="">
+      <div>
+        <h2>Plasma in PETSCII</h2>
+        <p>Watch the same plasma flow across a canvas and through C64-style terminal characters.</p>
+      </div>
+    </a>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>
+        <p class="wordmark"><span class="prompt" aria-hidden="true">&gt;_</span> Puzzle Terminal</p>
+        <!-- ANSI Second Reality REPORT.md: Part 00 and Phase 2 results; README.md: License and credits; SecondRealityPlusPlus README.md: Attribution -->
+        <p>Second Reality © Future Crew, 1993. Music by Purple Motion and Skaven.</p>
+        <p>Playback by ANSI Second Reality, built on SecondReality++.</p>
+      </div>
+      <div>
+        <p class="footer-links"><a href="./credits.html">Credits &amp; licences</a> <a href="https://github.com/lateshift/puzzle-term">Puzzle source on GitHub</a></p>
+        <p id="build-info" class="build-info"></p>
+        <p>This site makes no third-party requests.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

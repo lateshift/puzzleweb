@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="One flowing plasma, with C64-style characters drawn by a live Puzzle terminal.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>Plasma in PETSCII — Puzzle Terminal</title>
+  <link rel="stylesheet" href="./css/site.css">
+  <link rel="stylesheet" href="./css/plasma.css">
+  <script type="module" src="./js/plasma.js"></script>
+</head>
+<body class="plasma-page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="wordmark" href="./">Puzzle Term ft. Second Reality</a>
+      <nav aria-label="Main">
+        <a href="./">Home</a>
+        <a href="./plasma.html" aria-current="page">Plasma</a>
+        <a href="./credits.html">Credits</a>
+      </nav>
+    </div>
+  </header>
+
+  <canvas id="plasma-background" class="plasma-background" aria-hidden="true"></canvas>
+  <main class="plasma-main" id="main" aria-label="Plasma">
+    <div class="plasma-window" id="plasma-window">
+      <div class="plasma-terminal" id="plasma-terminal" aria-label="Puzzle Terminal" aria-describedby="plasma-caption"></div>
+      <p id="plasma-status" class="plasma-pill" role="status">Loading terminal…</p>
+    </div>
+    <div class="plasma-info">
+      <!-- docs/API.md: Terminal and transport; docs/protocols/support.md: OSC 4/104 and mode 2026; docs/SETTINGS.md: font.builtinGlyphs -->
+      <p id="plasma-caption" class="plasma-pill">This part is a Puzzle terminal: plasma drawn with escape sequences</p>
+      <div class="plasma-controls" aria-label="Plasma controls">
+        <button id="plasma-motion" type="button">Pause</button>
+        <button id="plasma-stats-toggle" type="button" aria-controls="plasma-stats" aria-expanded="false">Stats</button>
+      </div>
+      <output id="plasma-stats" class="plasma-pill plasma-stats" aria-label="Plasma performance" aria-live="off" hidden></output>
+    </div>
+    <noscript><p class="plasma-pill">Enable JavaScript to see the plasma.</p></noscript>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="footer-links"><a href="./credits.html">Credits &amp; licences</a> <a href="https://github.com/VICE-Team/svn-mirror/blob/main/vice/data/C64/colodore.vpl">Colodore PAL palette</a></p>
+      <p>This site makes no third-party requests.</p>
+    </div>
+  </footer>
+</body>
+</html>
